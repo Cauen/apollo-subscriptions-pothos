@@ -1,5 +1,4 @@
 import { User } from '@prisma/client';
-// import { ApolloServer } from 'apollo-server';
 import { db } from './db';
 import { schema } from './schema';
 
