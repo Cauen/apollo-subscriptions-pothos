@@ -70,11 +70,6 @@ const context = async ({
   };
 };
 
-
-// const server = new ApolloServer<Context>({
-//   schema,
-//   context,
-// });
 const server = new ApolloServer<Context>({
   schema,
   plugins: [
@@ -93,10 +88,6 @@ const server = new ApolloServer<Context>({
     },
   ],
 });
-// server.listen(3000).then(({ url }) => {
-//   console.log(`🚀 Server ready at ${url}`);
-// });
-
 
 (async () => {
   await server.start();
@@ -114,14 +105,4 @@ const server = new ApolloServer<Context>({
       `🚀 Subscription endpoint ready at ws://localhost:${PORT}/graphql`
     );
   });
-
-  // // In the background, increment a number every second and notify subscribers when it changes.
-  // function incrementNumber() {
-  //   currentNumber++;
-  //   pubsub.publish('NUMBER_INCREMENTED', { numberIncremented: currentNumber });
-  //   setTimeout(incrementNumber, 1000);
-  // }
-
-  // // Start incrementing
-  // incrementNumber();
-})(); // iife
+})();
