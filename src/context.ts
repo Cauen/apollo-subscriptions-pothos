@@ -18,13 +18,17 @@ export interface Context {
 
 export const pubsub = new PubSub();
 
+export const defaultContext = {
+  db: prisma,
+  pubsub,
+}
+
 export async function createContext({ req, res }: { req: IncomingMessage, res: ServerResponse }): Promise<Context> {
   return {
+    ...defaultContext,
     request: req,
     response: res,
-    db: prisma,
     select: {},
-    pubsub,
     user: undefined //await getUserByToken(req),
   }
 }

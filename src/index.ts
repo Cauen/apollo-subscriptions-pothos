@@ -7,10 +7,8 @@ import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/lib/use/ws";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { createContext } from "./context";
-
+import { createContext, defaultContext } from "./context";
 import { schema as schemaPothos } from "./schema"; // Schema Error
-import { schema as schemaWorking } from "./schemaWorking";
 
 const PORT = 4020;
 
@@ -23,7 +21,13 @@ const wsServer = new WebSocketServer({
 });
 
 const schema = schemaPothos;
-const serverCleanup = useServer({ schema }, wsServer);
+const serverCleanup = useServer(
+  {
+    schema,
+    context: () => defaultContext,
+  },
+  wsServer
+);
 
 const server = new ApolloServer({
   schema,
