@@ -79,6 +79,20 @@ builder.mutationType({
     }),
   }),
 });
-builder.subscriptionType({});
+builder.subscriptionType({
+  fields: (t) => ({
+    health: t.field({
+      type: "Int",
+      args: {
+        id: t.arg.id({ required: true }),
+      },
+      subscribe: (root, args, ctx) => {
+        console.log({ root, args, ctx })
+        return ctx.pubsub.subscribe('post', args.id)
+      },
+      resolve: (event) => event,
+    }),
+  }),
+});
 
 export const schema = builder.toSchema({});
