@@ -27,7 +27,6 @@ export const builder = new SchemaBuilder<{
   },
   smartSubscriptions: {
     ...subscribeOptionsFromIterator((name, context) => {
-      console.log({ name, pubsub })
       return pubsub.asyncIterator(name);
     })
   },
