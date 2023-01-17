@@ -1,11 +1,17 @@
 import { Prisma } from '.prisma/client';
 import SchemaBuilder from '@pothos/core';
 import PrismaPlugin from '@pothos/plugin-prisma';
-import { Scalars } from '../../../../src';
-import { db } from '../db';
+import { prisma } from '../db';
 import PrismaTypes from '../generated/objects';
-import { Context } from '@/server';
 import SmartSubscriptionsPlugin, { subscribeOptionsFromIterator } from '@pothos/plugin-smart-subscriptions';
+import { Scalars } from 'prisma-generator-pothos-codegen';
+import { pubsub } from '@/pubsub';
+import { Context } from '@/context';
+
+const { subscribe, unsubscribe } = subscribeOptionsFromIterator((name, context) => {
+  console.log({ name, pubsub })
+  return pubsub.asyncIterator(name);
+})
 
 export const builder = new SchemaBuilder<{
   Context: Context,
@@ -23,11 +29,10 @@ export const builder = new SchemaBuilder<{
 }>({
   plugins: [PrismaPlugin, SmartSubscriptionsPlugin],
   prisma: {
-    client: db,
+    client: prisma,
   },
   smartSubscriptions: {
-    ...subscribeOptionsFromIterator((name, { pubsub }) => {
-      return pubsub.asyncIterator(name);
-    }),
+    subscribe,
+    unsubscribe,
   },
 });

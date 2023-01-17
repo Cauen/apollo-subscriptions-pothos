@@ -1,107 +1,81 @@
-import { User } from '@prisma/client';
-import { db } from './db';
-import { schema } from './schema';
+// import { ApolloServer } from 'apollo-server-ex'
+// import { ApolloServer } from 'apollo-server-express'
+import { schema } from './schema'
+import { createContext } from './context'
+import express, { Express } from 'express'
+import * as path from 'path'
+import cors from 'cors'
+import { execute, subscribe } from 'graphql'
+// import { SubscriptionServer } from 'subscriptions-transport-ws'
+import { makeExecutableSchema } from '@graphql-tools/schema'
+import { createServer, Server } from 'http'
+import bodyparser from 'body-parser'
+import { ApolloServer } from '@apollo/server'
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
+import { json } from 'body-parser'
+import { expressMiddleware } from '@apollo/server/express4'
+// import { blingOrderStockCallback } from './schema/ShopOrder/controllers/blingOrderStockCallback'
+// import { blingOrderNfeCallback } from './schema/ShopOrder/controllers/blingOrderNfeCallback'
 
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import express from 'express';
-import { createServer } from 'http';
-import { WebSocketServer } from 'ws';
-import { useServer } from 'graphql-ws/lib/use/ws';
+const startedAt = new Date().toISOString()
 
-import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
+class AppServer {
+  express: Express
+  server: Server
 
+  constructor() {
+    this.express = express()
+    this.server = createServer(this.express)
+    this.configs()
+    this.middlewares()
+    this.routes()
+    this.workers()
+    this.apollo()
+  }
 
-import bodyParser from 'body-parser';
-import cors, { CorsOptions } from 'cors';
+  configs() {
+    process.env.TZ = 'UTC'
+  }
 
-import { PubSub } from 'graphql-subscriptions';
+  middlewares() {
+    this.express.use(cors())
+    this.express.use(bodyparser.json({ limit: '200mb' })) // enable upload big images at signature upload
+  }
 
-const pubsub = new PubSub();
+  workers() {
+    // startCron()
+  }
 
-const path = '/';
-const PORT = process.env.PORT ? Number(process.env.PORT) : 8080;
-const allowedOrigins =
-  process.env.NODE_ENV === 'development' || process.env.NODE_ENV === undefined
-    ? [
-        'http://localhost:3000',
-        'http://localhost:3001',
-        'https://studio.apollographql.com',
-      ]
-    : ['production client url'];
+  routes() {
+    this.express.get('/', (_, res) =>
+      res.send('Backend started at ' + startedAt),
+    )
+  }
 
-const corsOptions: CorsOptions = {
-  origin: allowedOrigins,
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
+  async apollo() {
+    const server = new ApolloServer({
+      schema,
+      introspection: true, // TODO: protect this
+      plugins: [
+        ApolloServerPluginDrainHttpServer({ httpServer: this.server }),
+      ],
+    })
 
-const app = express();
-app.disable('x-powered-by');
-const httpServer = createServer(app);
+    process.on('uncaughtException', function (err) {
+      console.log('Caught exception: ' + err, 'error')
+    })
 
-const wsServer = new WebSocketServer({
-  server: httpServer,
-  path,
-});
+    console.log(`🚀 Starting server`)
+    await server.start()
+    this.express.use(
+      '/graphql',
+      cors<cors.CorsRequest>(),
+      json(),
+      expressMiddleware(server, {
+        context: createContext,
+      }),
+    )
+  }
+}
 
-const serverCleanup = useServer({ schema }, wsServer);
-
-export type Context = {
-  db: typeof db;
-  user: User | null;
-  pubsub: typeof pubsub;
-};
-
-let iter = 0;
-const context = async ({
-  req,
-  res,
-}: {
-  req: Express.Request;
-  res: Express.Response;
-}): Promise<Context> => {
-  const user: User | null = await db.user.findFirst({});
-  console.log('context', iter++, user); //, req.headers);
-  return {
-    db,
-    user,
-    pubsub
-  };
-};
-
-const server = new ApolloServer<Context>({
-  schema,
-  plugins: [
-    // Proper shutdown for the HTTP server.
-    ApolloServerPluginDrainHttpServer({ httpServer }),
-
-    // Proper shutdown for the WebSocket server.
-    {
-      async serverWillStart() {
-        return {
-          async drainServer() {
-            await serverCleanup.dispose();
-          },
-        };
-      },
-    },
-  ],
-});
-
-(async () => {
-  await server.start();
-  app.use(
-    path,
-    cors<cors.CorsRequest>(corsOptions),
-    bodyParser.json(),
-    expressMiddleware<Context>(server, { context })
-  );
-
-  // Now that our HTTP server is fully set up, actually listen.
-  httpServer.listen(PORT, () => {
-    console.log(`🚀 Query endpoint ready at http://localhost:${PORT}/graphql`);
-    console.log(
-      `🚀 Subscription endpoint ready at ws://localhost:${PORT}/graphql`
-    );
-  });
-})();
+export default new AppServer().server

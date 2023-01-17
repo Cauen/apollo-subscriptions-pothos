@@ -15,7 +15,7 @@ generator pothos {
 }
 
 generator pothosCrud {
-  provider            = "ts-node --transpile-only ../../src/generator.ts"
+  provider            = "prisma-generator-pothos-codegen"
   generatorConfigPath = "../src/schema/configs.js"
 }
 

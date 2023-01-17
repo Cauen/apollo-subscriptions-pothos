@@ -1,14 +1,11 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
+import { pubsub } from './context'
 
-import { PubSub } from 'graphql-subscriptions';
-export const pubsub = new PubSub();
-
-export const db = new PrismaClient({
+export const prisma = new PrismaClient({
   // log: ['error', 'info', 'query', 'warn'],
-});
+})
 
-db.$use(async (params, next) => {
-  console.log('prisma middleware.', pubsub);
+prisma.$use(async (params, next) => {
   const { action, args, dataPath, model } = params
   
   const result = await next(params)
@@ -21,7 +18,7 @@ db.$use(async (params, next) => {
     params.action === 'createMany'
   ) {
     console.log(`🚀 ${params.action} ${params.model}`)
-    pubsub.publish('DATABASE-UPDATED-'+model, result)
+    pubsub.publish('database-updated-'+model, {})
   }
   // See results here
   return result
