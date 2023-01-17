@@ -1,26 +1,20 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "target": "es6",
-    "moduleResolution": "node",
-    "sourceMap": true,
+    "rootDirs": ["src"],
+    "strict": true,
     "outDir": "dist",
+    "lib": ["es2020"],
+    "target": "es2020",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "types": ["node"],
     "skipLibCheck": true,
-    "noUncheckedIndexedAccess": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
     "baseUrl": ".",
-    "lib": ["es2021"],
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@prisma-generator-pothos-codegen": [
-        "../../src/*"
-      ],
-    },
+      "@/*": ["src/*"],
+      "@prisma-generator-pothos-codegen": ["../../src/*"]
+    }
   },
-  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

@@ -5,25 +5,19 @@
   "license": "MIT",
   "scripts": {
     "generate": "prisma generate",
-    "generate-debug": "npx cross-env DEBUG=* prisma generate",
     "migrate": "prisma migrate dev",
     "seed": "prisma migrate reset -f",
-    "start": "node -r @swc-node/register src/server.ts",
-    "example": "node -r @swc-node/register src/example.ts",
-    "dev:debug": "nodemon --inspect --exec \"node -r @swc-node/register ./src/example.ts\" -e .ts",
-    "generator": "node -r @swc-node/register ../../src/inputsGenerator/index.ts",
-    "type": "tsc --noEmit",
-    "format": "eslint --fix ./src",
-    "genstart": "yarn generate && yarn start"
+    "start": "node -r @swc-node/register src/index.ts"
   },
   "prisma": {
     "seed": "node -r @swc-node/register prisma/seed.ts"
   },
   "dependencies": {
     "@apollo/server": "^4.3.0",
-    "@pothos/core": "^3.23.0",
-    "@pothos/plugin-prisma": "^3.37.0",
-    "@pothos/plugin-smart-subscriptions": "^3.6.7",
+    "@graphql-tools/schema": "^9.0.13",
+    "@pothos/core": "^3.12.2",
+    "@pothos/plugin-prisma": "^3.13.2",
+    "@pothos/plugin-smart-subscriptions": "^3.6.4",
     "@prisma/client": "^4.7.0",
     "@swc-node/register": "^1.5.1",
     "@swc/core": "^1.3.21",
@@ -33,6 +27,7 @@
     "graphql-ws": "^5.11.2",
     "prisma": "^4.7.0",
     "prisma-generator-pothos-codegen": "^0.5.1",
+    "subscriptions-transport-ws": "^0.11.0",
     "ts-node": "^10.8.2",
     "typescript": "^4.7.4",
     "ws": "^8.12.0"
