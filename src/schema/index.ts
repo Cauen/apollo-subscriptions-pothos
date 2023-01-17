@@ -1,110 +1,51 @@
-import {
-  generateAllCrud,
-  generateAllObjects,
-  generateAllQueries,
-  generateAllMutations,
-} from "./__generated__/autocrud";
 import { builder } from "./builder";
 
-import { findFirstCommentQueryObject } from "./__generated__/Comment/";
 import { pubsub } from "@/context";
 
-// export const findFirstOrderTest = builder.queryFields((t) => {
-//   const field = findFirstCommentQueryObject(t);
-//   return {
-//     findFirstOrderTest: t.prismaField({
-//       ...field,
-//       args: {
-//         testParam: t.arg({ type: "String", required: false }),
-//       },
-//       resolve: async (...args) => {
-//         const [include, root, { testParam }, { db }, info] = args;
-//         if (testParam === "123") throw new Error("Invalid");
-//         return field.resolve(...args);
-//       },
-//       smartSubscription: true,
-//       subscribe: (subscriptions) => subscriptions.register(`DATABASE-UPDATED-${field.type}`),
-//       // unsubscribe: (subscriptions) => subscriptions.unregister(`DATABASE-UPDATED-${field.type}`)
-//     }),
-//   };
-// });
+let currentNumber = 0;
+function incrementNumber() {
+  currentNumber++;
+  pubsub.publish("NUMBER_INCREMENTED", { numberIncremented: currentNumber });
+  setTimeout(incrementNumber, 1000);
+}
+
+incrementNumber();
 
 builder.queryFields((t) => ({
-  polls: t.field({
-    type: "String",
+  numberIncremented: t.field({
+    type: "Int",
     smartSubscription: true,
     subscribe: (subscriptions, root, args, ctx, info) => {
-      console.log({ subscriptions, ctx })
-      // subscriptions.register('poll-added')
-      // subscriptions.register('poll-delted')
+      subscriptions.register('NUMBER_INCREMENTED')
     },
     resolve: (root, args, ctx, info) => {
-      return "ata"
+      return currentNumber
     },
   }),
 }))
 
-// generateAllObjects();
-// generateAllQueries({ exclude: ['Post'] });
-// generateAllMutations({ exclude: ['Post'] });
-
-// pubsub.subscribe("ata", (message) => console.log({ message }))
-
-// const iterated = async () => {
-//   const a = pubsub.asyncIterator("ata")
-//   const c = await a.next()
-//   console.log({ c })
-//   const d = await a.next()
-//   console.log({ d })
-// }
-
-// iterated()
-
 builder.queryType({
   fields: (t) => ({
-    health: t.field({
-      type: "String",
+    currentNumber: t.field({
+      type: "Int",
       resolve: (parent, args, ctx) => {
-        console.log({ ctx: Object.keys(ctx) })
-        pubsub.publish("ata", "123");
-        return "Ok";
+        return currentNumber;
       },
     }),
   }),
 });
-builder.mutationType({
-  fields: (t) => ({
-    health: t.field({
-      type: "String",
-      resolve: () => "Ok",
-    }),
-  }),
-});
+
 builder.subscriptionType({
   fields: (t) => ({
-    health: t.field({
-      type: "Int",
-      args: {
-        id: t.arg.id({ required: true }),
-      },
-      // @ts-expect-error
-      subscribe: (root, args, ctx) => {
-        console.log({ root, args, ctx })
-        // @ts-expect-error
-        return ctx.pubsub.subscribe('post', args.id)
-      },
-      resolve: (a, b, c, d) => 1,
-    }),
-    test: t.int({
+    iterNumber: t.int({
       resolve: (parent) => parent,
       subscribe: () => {
-        let i = 0;
         const iter = {
           next: () =>
             new Promise<IteratorResult<number, never>>((resolve) => {
               setTimeout(() => {
                 resolve({
-                  value: (i += 1),
+                  value: currentNumber,
                   done: false,
                 });
               }, 1000);
