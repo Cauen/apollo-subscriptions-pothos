@@ -9,7 +9,7 @@ import { useServer } from "graphql-ws/lib/use/ws";
 import { PubSub } from "graphql-subscriptions";
 import bodyParser from "body-parser";
 import cors from "cors";
-// import { schema } from "./schema";
+import { schema as schemaPothos } from "./schema";
 import { createContext } from "./context";
 
 const PORT = 4000;
@@ -59,7 +59,7 @@ const serverCleanup = useServer({ schema }, wsServer);
 
 // Set up ApolloServer.
 const server = new ApolloServer({
-  schema,
+  schema: schemaPothos,
   plugins: [
     // Proper shutdown for the HTTP server.
     ApolloServerPluginDrainHttpServer({ httpServer }),
