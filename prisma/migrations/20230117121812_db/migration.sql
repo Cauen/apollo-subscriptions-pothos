@@ -3,6 +3,9 @@ CREATE TABLE "User" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
+    "birthdate" DATETIME NOT NULL,
+    "login" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME
 );
@@ -14,6 +17,14 @@ CREATE TABLE "Post" (
     "content" TEXT NOT NULL,
     "authorId" INTEGER NOT NULL,
     CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "ExtraModal" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "title" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME
 );
 
 -- CreateTable
