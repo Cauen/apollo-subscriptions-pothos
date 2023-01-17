@@ -1,23 +1,27 @@
 import {
+  generateAllMutations,
   generateAllObjects,
+  generateAllQueries,
 } from "./__generated__/autocrud";
 import { builder } from "./builder";
 
 import { countExtraModalQueryObject, createOneExtraModalMutation } from "./__generated__/ExtraModal";
 
 generateAllObjects()
-builder.mutationFields(createOneExtraModalMutation)
-
-export const countExtraModalTest = builder.queryFields((t) => {
-  const field = countExtraModalQueryObject(t);
-  return {
-    countExtraModalTest: t.field({
+generateAllMutations()
+generateAllQueries({
+  handleResolver: ({
+    field,
+    modelName,
+  }) => {
+    return {
       ...field,
       smartSubscription: true,
-      subscribe: (subscriptions) => subscriptions.register(`database-updated-ExtraModal`),
-    }),
-  };
-});
+      subscribe: (subscriptions: any) => subscriptions.register(`database-updated-${modelName}`),
+    };
+  },
+})
+
 
 builder.queryType();
 builder.mutationType();
