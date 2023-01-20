@@ -4,14 +4,15 @@ import {
   generateAllQueries,
 } from "./__generated__/autocrud";
 import { builder } from "./builder";
-import "./autoImport"
-import { autoImport } from "./autoImport";
+import "./fsRouter"
+import { autoImport } from "./fsRouter";
 
-autoImport({
+const imported = autoImport({
   root: __dirname,
   extensions: [".query.ts", "inputs.ts"],
   ignore: ["__generated__"],
 });
+// console.log({ imported })
 
 generateAllObjects();
 generateAllMutations();

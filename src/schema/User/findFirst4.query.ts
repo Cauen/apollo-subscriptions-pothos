@@ -1,28 +1,14 @@
 import { builder } from "../builder";
+import { getResolverName } from "../fsRouter";
 import { findFirstUserQueryObject } from "../__generated__/User";
 
-export const findFirstUserTest3 = builder.queryFields((t) => {
-  const field = findFirstUserQueryObject(t);
+export default builder.queryField(getResolverName(), (t) => t.prismaField((() => {
+  const object = findFirstUserQueryObject(t)
   return {
-    findFirstUserTest4: t.prismaField({
-      ...field,
-      args: {
-        testParam: t.arg({ type: "String", required: false }),
-      },
-      resolve: async (...args) => {
-        const [include, root, { testParam }, { response, db }, info] = args;
-        return db.user.findFirst({
-            where: {
-                Address: {
-                    is: {
-                        city: {
-                            contains: testParam || ""
-                        }
-                    }
-                }
-            }
-        })
-      },
-    }),
-  };
-});
+    ...object,
+    args: {
+      testParam: t.arg({ type: "String", required: false }),
+    },
+    type: "User",
+  }
+})()))
