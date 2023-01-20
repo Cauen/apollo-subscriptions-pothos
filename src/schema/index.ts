@@ -4,27 +4,22 @@ import {
   generateAllQueries,
 } from "./__generated__/autocrud";
 import { builder } from "./builder";
-import "./fsRouter"
 import { autoImport } from "./fsRouter";
 
-const imported = autoImport({
+autoImport({
   root: __dirname,
-  extensions: [".query.ts", "mutation.ts", "inputs.ts"],
+  extensions: [".query.ts", ".mutation.ts", "inputs.ts"],
   ignore: ["__generated__"],
 });
-// console.log({ imported })
-
 generateAllObjects();
-generateAllMutations();
+generateAllMutations({ exclude: ["User"] });
 generateAllQueries({
-  handleResolver: ({ field, modelName }) => {
-    return {
-      ...field,
-      smartSubscription: true,
-      subscribe: (subscriptions: any) =>
-        subscriptions.register(`database-updated-${modelName}`),
-    };
-  },
+  handleResolver: ({ field, modelName }) => ({
+    ...field,
+    smartSubscription: true,
+    subscribe: (subscriptions: any) =>
+      subscriptions.register(`database-updated-${modelName}`),
+  }),
 });
 
 builder.queryType();
