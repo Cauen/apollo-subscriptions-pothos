@@ -4,9 +4,14 @@ import {
   generateAllQueries,
 } from "./__generated__/autocrud";
 import { builder } from "./builder";
-import "./autoRequire"
+import "./autoImport"
+import { autoImport } from "./autoImport";
 
-import './inputs'
+autoImport({
+  root: __dirname,
+  extensions: [".query.ts", "inputs.ts"],
+  ignore: ["__generated__"],
+});
 
 generateAllObjects();
 generateAllMutations();
