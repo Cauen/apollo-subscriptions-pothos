@@ -4,8 +4,8 @@ import {
   generateAllQueries,
 } from "./__generated__/autocrud";
 import { builder } from "./builder";
+import "./autoRequire"
 
-import './User'
 import './inputs'
 
 generateAllObjects();
