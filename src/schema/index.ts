@@ -9,7 +9,7 @@ import { autoImport } from "./fsRouter";
 
 const imported = autoImport({
   root: __dirname,
-  extensions: [".query.ts", "inputs.ts"],
+  extensions: [".query.ts", "mutation.ts", "inputs.ts"],
   ignore: ["__generated__"],
 });
 // console.log({ imported })
