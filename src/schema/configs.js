@@ -1,13 +1,14 @@
-// /** @type {import('prisma-generator-pothos-codegen').Config} */
+const fs = require("fs");
+const path = require("path");
 
-/** @type {import('../../../../src').Config} */
+/** @type {import('prisma-generator-pothos-codegen').Config} */
 module.exports = {
   crud: {
     outputDir: './src/schema/__generated__/',
     // replacer(generated, position) {
     //   return `// THIS CONTENT WAS INSERTED AT REPLACE. THE POSITION IS ${position}\n${generated}`
     // },
-    excludeResolversContain: ["User"],
+    // excludeResolversContain: ["User"],
     prismaCaller: '_context.db',
     disabled: false,
     builderImporter: "import { builder } from '../builder';",
@@ -20,18 +21,24 @@ module.exports = {
     outputFilePath: './src/schema/__generated__/inputs.ts',
   },
   global: {
-    // replacer: (str, section) => {
-    //   if (section === 'crud.model.resolver') {
-    //     return str.replace(
-    //       "import * as Inputs from '../inputs'",
-    //       "import * as Inputs from '../../inputs';",
-    //     );
-    //   }
-    //   return str;
-    // },
-    // afterGenerate: (dmmf) => {
-    //   console.log(dmmf)
-    //   throw new Error("Owpa")
-    // }
+    afterGenerate: ({ datamodel: { enums, models } }) => {
+      fs.writeFile(
+        path.join(__dirname, `CodeSchema/adminSettings.json`),
+        JSON.stringify({ enums, models }, null, 2),
+        {},
+        (err) => {
+          console.log({ err });
+        }
+      );
+    },
+    replacer: (str, section) => {
+      if (section === 'crud.model.object') {
+        return str.replace(
+          "type: Inputs.Address,",
+          'type: "Json", // Mongodb Types not working yet',
+        );
+      }
+      return str;
+    },
   },
 };

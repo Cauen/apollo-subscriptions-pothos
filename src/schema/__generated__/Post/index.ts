@@ -1,10 +1,10 @@
 export {
   PostObject,
   PostIdFieldObject,
+  PostSlugFieldObject,
   PostTitleFieldObject,
-  PostContentFieldObject,
+  PostBodyFieldObject,
   PostAuthorFieldObject,
-  PostCommentsFieldObject,
   PostAuthorIdFieldObject
 } from './object.base';
 export {
