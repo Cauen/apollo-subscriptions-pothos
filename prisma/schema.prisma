@@ -1,6 +1,6 @@
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -14,28 +14,33 @@ generator pothos {
   output       = "./generated.d.ts"
 }
 
-model User {
-  id        Int       @id @default(autoincrement())
-  firstName String
-  lastName  String
-  posts     Post[]
-  comments  Comment[]
+generator pothosCrud {
+  provider            = "prisma-generator-pothos-codegen"
+  generatorConfigPath = "../src/schema/configs.js"
 }
 
 model Post {
-  id       Int       @id @default(autoincrement())
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  slug     String    @unique
   title    String
-  content  String
-  author   User      @relation(fields: [authorId], references: [id])
-  comments Comment[]
-  authorId Int
+  body     String
+  Author   User      @relation(fields: [authorId], references: [id])
+  authorId String    @db.ObjectId
 }
 
-model Comment {
-  id       Int    @id @default(autoincrement())
-  comment  String
-  author   User   @relation(fields: [authorId], references: [id])
-  post     Post   @relation(fields: [postId], references: [id])
-  authorId Int
-  postId   Int
+model User {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String   @unique
+  name    String?
+  // @pothos.omit()
+  Address Address?
+  Posts   Post[]
+}
+
+// Address is an embedded document
+type Address {
+  street String
+  city   String
+  state  String
+  zip    String
 }

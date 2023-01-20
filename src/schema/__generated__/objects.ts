@@ -10,16 +10,8 @@ export const BatchPayload = builder.objectType(builder.objectRef<Prisma.BatchPay
 });
 
 export const modelNames = [
-  'User',
   'Post',
-  'ExtraModal',
-  'Comment',
-  'Profile',
-  'Follow',
-  'Unrelated',
-  'IdOnly',
-  'WithoutID',
-  'WithScalars',
+  'User',
 ] as const;
 
 export type Model = typeof modelNames[number];

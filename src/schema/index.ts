@@ -5,6 +5,9 @@ import {
 } from "./__generated__/autocrud";
 import { builder } from "./builder";
 
+import './User'
+import './inputs'
+
 generateAllObjects();
 generateAllMutations();
 generateAllQueries({

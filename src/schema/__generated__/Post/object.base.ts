@@ -12,15 +12,20 @@ export const PostObject = definePrismaObject('Post', {
   findUnique: ({ id }) => ({ id }),
   fields: (t) => ({
     id: t.exposeID('id', PostIdFieldObject),
+    slug: t.exposeString('slug', PostSlugFieldObject),
     title: t.exposeString('title', PostTitleFieldObject),
-    content: t.exposeString('content', PostContentFieldObject),
+    body: t.exposeString('body', PostBodyFieldObject),
     Author: t.relation('Author', PostAuthorFieldObject),
-    Comments: t.relation('Comments', PostCommentsFieldObject(t)),
-    authorId: t.exposeInt('authorId', PostAuthorIdFieldObject),
+    authorId: t.exposeString('authorId', PostAuthorIdFieldObject),
   }),
 });
 
-export const PostIdFieldObject = defineExposeObject('Int', {
+export const PostIdFieldObject = defineExposeObject('String', {
+  description: undefined,
+  nullable: false,
+});
+
+export const PostSlugFieldObject = defineExposeObject('String', {
   description: undefined,
   nullable: false,
 });
@@ -30,8 +35,8 @@ export const PostTitleFieldObject = defineExposeObject('String', {
   nullable: false,
 });
 
-export const PostContentFieldObject = defineExposeObject('String', {
-  description: 'createdAt description',
+export const PostBodyFieldObject = defineExposeObject('String', {
+  description: undefined,
   nullable: false,
 });
 
@@ -42,30 +47,7 @@ export const PostAuthorFieldObject = defineRelationObject('Post', 'Author', {
   query: undefined,
 });
 
-export const PostCommentsFieldObject = defineRelationFunction('Post', (t) =>
-  defineRelationObject('Post', 'Comments', {
-    description: undefined,
-    nullable: false,
-    args: {
-      where: t.arg({ type: Inputs.CommentWhereInput, required: false }),
-      orderBy: t.arg({ type: [Inputs.CommentOrderByWithRelationInput], required: false }),
-      cursor: t.arg({ type: Inputs.CommentWhereUniqueInput, required: false }),
-      take: t.arg({ type: 'Int', required: false }),
-      skip: t.arg({ type: 'Int', required: false }),
-      distinct: t.arg({ type: [Inputs.CommentScalarFieldEnum], required: false }),
-    },
-    query: (args) => ({
-      where: args.where || undefined,
-      cursor: args.cursor || undefined,
-      take: args.take || undefined,
-      distinct: args.distinct || undefined,
-      skip: args.skip || undefined,
-      orderBy: args.orderBy || undefined,
-    }),
-  }),
-);
-
-export const PostAuthorIdFieldObject = defineExposeObject('Int', {
+export const PostAuthorIdFieldObject = defineExposeObject('String', {
   description: undefined,
   nullable: false,
 });

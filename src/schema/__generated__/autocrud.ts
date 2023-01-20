@@ -1,14 +1,6 @@
 import { builder } from '../builder';
-import * as User from './User';
 import * as Post from './Post';
-import * as ExtraModal from './ExtraModal';
-import * as Comment from './Comment';
-import * as Profile from './Profile';
-import * as Follow from './Follow';
-import * as Unrelated from './Unrelated';
-import * as IdOnly from './IdOnly';
-import * as WithoutID from './WithoutID';
-import * as WithScalars from './WithScalars';
+import * as User from './User';
 import * as Objects from './objects';
 
 type Model = Objects.Model;
@@ -21,15 +13,6 @@ export const Cruds: Record<
     mutations: Record<string, Function>;
   }
 > = {
-  User: {
-    Object: User.UserObject,
-    queries: {
-
-    },
-    mutations: {
-
-    },
-  },
   Post: {
     Object: Post.PostObject,
     queries: {
@@ -48,148 +31,22 @@ export const Cruds: Record<
       upsertOne: Post.upsertOnePostMutationObject,
     },
   },
-  ExtraModal: {
-    Object: ExtraModal.ExtraModalObject,
+  User: {
+    Object: User.UserObject,
     queries: {
-      findFirst: ExtraModal.findFirstExtraModalQueryObject,
-      findMany: ExtraModal.findManyExtraModalQueryObject,
-      count: ExtraModal.countExtraModalQueryObject,
-      findUnique: ExtraModal.findUniqueExtraModalQueryObject,
+      findFirst: User.findFirstUserQueryObject,
+      findMany: User.findManyUserQueryObject,
+      count: User.countUserQueryObject,
+      findUnique: User.findUniqueUserQueryObject,
     },
     mutations: {
-      createMany: ExtraModal.createManyExtraModalMutationObject,
-      createOne: ExtraModal.createOneExtraModalMutationObject,
-      deleteMany: ExtraModal.deleteManyExtraModalMutationObject,
-      deleteOne: ExtraModal.deleteOneExtraModalMutationObject,
-      updateMany: ExtraModal.updateManyExtraModalMutationObject,
-      updateOne: ExtraModal.updateOneExtraModalMutationObject,
-      upsertOne: ExtraModal.upsertOneExtraModalMutationObject,
-    },
-  },
-  Comment: {
-    Object: Comment.CommentObject,
-    queries: {
-      findFirst: Comment.findFirstCommentQueryObject,
-      findMany: Comment.findManyCommentQueryObject,
-      count: Comment.countCommentQueryObject,
-      findUnique: Comment.findUniqueCommentQueryObject,
-    },
-    mutations: {
-      createMany: Comment.createManyCommentMutationObject,
-      createOne: Comment.createOneCommentMutationObject,
-      deleteMany: Comment.deleteManyCommentMutationObject,
-      deleteOne: Comment.deleteOneCommentMutationObject,
-      updateMany: Comment.updateManyCommentMutationObject,
-      updateOne: Comment.updateOneCommentMutationObject,
-      upsertOne: Comment.upsertOneCommentMutationObject,
-    },
-  },
-  Profile: {
-    Object: Profile.ProfileObject,
-    queries: {
-      findFirst: Profile.findFirstProfileQueryObject,
-      findMany: Profile.findManyProfileQueryObject,
-      count: Profile.countProfileQueryObject,
-      findUnique: Profile.findUniqueProfileQueryObject,
-    },
-    mutations: {
-      createMany: Profile.createManyProfileMutationObject,
-      createOne: Profile.createOneProfileMutationObject,
-      deleteMany: Profile.deleteManyProfileMutationObject,
-      deleteOne: Profile.deleteOneProfileMutationObject,
-      updateMany: Profile.updateManyProfileMutationObject,
-      updateOne: Profile.updateOneProfileMutationObject,
-      upsertOne: Profile.upsertOneProfileMutationObject,
-    },
-  },
-  Follow: {
-    Object: Follow.FollowObject,
-    queries: {
-      findFirst: Follow.findFirstFollowQueryObject,
-      findMany: Follow.findManyFollowQueryObject,
-      count: Follow.countFollowQueryObject,
-      findUnique: Follow.findUniqueFollowQueryObject,
-    },
-    mutations: {
-      createMany: Follow.createManyFollowMutationObject,
-      createOne: Follow.createOneFollowMutationObject,
-      deleteMany: Follow.deleteManyFollowMutationObject,
-      deleteOne: Follow.deleteOneFollowMutationObject,
-      updateMany: Follow.updateManyFollowMutationObject,
-      updateOne: Follow.updateOneFollowMutationObject,
-      upsertOne: Follow.upsertOneFollowMutationObject,
-    },
-  },
-  Unrelated: {
-    Object: Unrelated.UnrelatedObject,
-    queries: {
-      findFirst: Unrelated.findFirstUnrelatedQueryObject,
-      findMany: Unrelated.findManyUnrelatedQueryObject,
-      count: Unrelated.countUnrelatedQueryObject,
-      findUnique: Unrelated.findUniqueUnrelatedQueryObject,
-    },
-    mutations: {
-      createMany: Unrelated.createManyUnrelatedMutationObject,
-      createOne: Unrelated.createOneUnrelatedMutationObject,
-      deleteMany: Unrelated.deleteManyUnrelatedMutationObject,
-      deleteOne: Unrelated.deleteOneUnrelatedMutationObject,
-      updateMany: Unrelated.updateManyUnrelatedMutationObject,
-      updateOne: Unrelated.updateOneUnrelatedMutationObject,
-      upsertOne: Unrelated.upsertOneUnrelatedMutationObject,
-    },
-  },
-  IdOnly: {
-    Object: IdOnly.IdOnlyObject,
-    queries: {
-      findFirst: IdOnly.findFirstIdOnlyQueryObject,
-      findMany: IdOnly.findManyIdOnlyQueryObject,
-      count: IdOnly.countIdOnlyQueryObject,
-      findUnique: IdOnly.findUniqueIdOnlyQueryObject,
-    },
-    mutations: {
-      createMany: IdOnly.createManyIdOnlyMutationObject,
-      createOne: IdOnly.createOneIdOnlyMutationObject,
-      deleteMany: IdOnly.deleteManyIdOnlyMutationObject,
-      deleteOne: IdOnly.deleteOneIdOnlyMutationObject,
-      updateMany: IdOnly.updateManyIdOnlyMutationObject,
-      updateOne: IdOnly.updateOneIdOnlyMutationObject,
-      upsertOne: IdOnly.upsertOneIdOnlyMutationObject,
-    },
-  },
-  WithoutID: {
-    Object: WithoutID.WithoutIDObject,
-    queries: {
-      findFirst: WithoutID.findFirstWithoutIDQueryObject,
-      findMany: WithoutID.findManyWithoutIDQueryObject,
-      count: WithoutID.countWithoutIDQueryObject,
-      findUnique: WithoutID.findUniqueWithoutIDQueryObject,
-    },
-    mutations: {
-      createMany: WithoutID.createManyWithoutIDMutationObject,
-      createOne: WithoutID.createOneWithoutIDMutationObject,
-      deleteMany: WithoutID.deleteManyWithoutIDMutationObject,
-      deleteOne: WithoutID.deleteOneWithoutIDMutationObject,
-      updateMany: WithoutID.updateManyWithoutIDMutationObject,
-      updateOne: WithoutID.updateOneWithoutIDMutationObject,
-      upsertOne: WithoutID.upsertOneWithoutIDMutationObject,
-    },
-  },
-  WithScalars: {
-    Object: WithScalars.WithScalarsObject,
-    queries: {
-      findFirst: WithScalars.findFirstWithScalarsQueryObject,
-      findMany: WithScalars.findManyWithScalarsQueryObject,
-      count: WithScalars.countWithScalarsQueryObject,
-      findUnique: WithScalars.findUniqueWithScalarsQueryObject,
-    },
-    mutations: {
-      createMany: WithScalars.createManyWithScalarsMutationObject,
-      createOne: WithScalars.createOneWithScalarsMutationObject,
-      deleteMany: WithScalars.deleteManyWithScalarsMutationObject,
-      deleteOne: WithScalars.deleteOneWithScalarsMutationObject,
-      updateMany: WithScalars.updateManyWithScalarsMutationObject,
-      updateOne: WithScalars.updateOneWithScalarsMutationObject,
-      upsertOne: WithScalars.upsertOneWithScalarsMutationObject,
+      createMany: User.createManyUserMutationObject,
+      createOne: User.createOneUserMutationObject,
+      deleteMany: User.deleteManyUserMutationObject,
+      deleteOne: User.deleteOneUserMutationObject,
+      updateMany: User.updateManyUserMutationObject,
+      updateOne: User.updateOneUserMutationObject,
+      upsertOne: User.upsertOneUserMutationObject,
     },
   },
 };
